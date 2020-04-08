@@ -1,5 +1,7 @@
 
 #include "renderer.h"
+#include "input_reader.h"
+
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -23,7 +25,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    Renderer renderer;
+    
 
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
@@ -41,11 +43,13 @@ int main()
 
     glViewport(0, 0, 800, 600);
 
+    Renderer renderer;
+    InputReader input_reader(window);
+
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     while (!glfwWindowShouldClose(window)) {
-        processInput(window);
-
+        input_reader.process_input();
         renderer.render();
 
         glfwSwapBuffers(window);
