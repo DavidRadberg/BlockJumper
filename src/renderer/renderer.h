@@ -15,9 +15,11 @@ public:
 
 private:
     std::vector<float> vertices_;
+    std::vector<int> indices_;
 
     unsigned int vbo_;
     unsigned int vao_;
+    unsigned int ebo_;
 
     unsigned int vertex_shader_;
     unsigned int fragment_shader_;
