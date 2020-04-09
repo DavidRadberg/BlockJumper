@@ -1,5 +1,7 @@
 #pragma once
 
+#include "shader.h"
+
 #include <vector>
 
 #include <glad/glad.h>
@@ -17,11 +19,9 @@ private:
     std::vector<float> vertices_;
     std::vector<int> indices_;
 
+    Shader shader_;
+
     unsigned int vbo_;
     unsigned int vao_;
     unsigned int ebo_;
-
-    unsigned int vertex_shader_;
-    unsigned int fragment_shader_;
-    unsigned int shader_program_;
 };
