@@ -7,7 +7,6 @@ Renderer::Renderer()
 {
     shader_.compile_shader("../shaders/basic.vert.glsl", "../shaders/basic.frag.glsl");
 
-    // 1 create vertices
     float tmp_vertices[] = {
          0.5f,  0.5f, 0.0f,  // top right
          0.5f, -0.5f, 0.0f,  // bottom right
@@ -19,6 +18,17 @@ Renderer::Renderer()
         vertices_.push_back(v);
     }
 
+    float tmp_uv[] = {
+        1.0f, 1.0f,  // top right
+        1.0f, 0.0f,  // bottom right
+        0.0f, 0.0f,  // bottom left
+        0.0f, 1.0f   // top left
+    };
+
+    for (float uv : tmp_uv) {
+        uv_.push_back(uv);
+    }
+
     unsigned int tmp_indices[] = {  // note that we start from 0!
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
@@ -28,19 +38,23 @@ Renderer::Renderer()
         indices_.push_back(i);
     }
 
-    // 3 create buffers
     glGenVertexArrays(1, &vao_);
-    glGenBuffers(1, &vbo_);
+    glGenBuffers(1, &vbo_pos_);
+    glGenBuffers(1, &vbo_uv_);
     glGenBuffers(1, &ebo_);
 
     // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
     glBindVertexArray(vao_);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    // changGL_DYNAMIC_DRAW if vertices change over time
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos_);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_.size(), vertices_.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_uv_);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * uv_.size(), uv_.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * indices_.size(), indices_.data(), GL_STATIC_DRAW);

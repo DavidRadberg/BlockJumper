@@ -17,11 +17,13 @@ public:
 
 private:
     std::vector<float> vertices_;
+    std::vector<float> uv_;
     std::vector<int> indices_;
 
     Shader shader_;
 
-    unsigned int vbo_;
+    unsigned int vbo_pos_;
+    unsigned int vbo_uv_;
     unsigned int vao_;
     unsigned int ebo_;
 };
