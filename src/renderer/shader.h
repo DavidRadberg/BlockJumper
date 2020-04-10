@@ -10,6 +10,8 @@ public:
     void set_bool(const std::string &name, bool value);
     void set_int(const std::string &name, int value);
     void set_float(const std::string &name, float value);
+
+    unsigned int get_id() { return id_; };
 private:
     unsigned int id_ = 0;
 

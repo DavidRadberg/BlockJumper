@@ -22,4 +22,5 @@ private:
     unsigned int vbo_uv_;
     unsigned int vao_;
     unsigned int ebo_;
+    unsigned int texture_;
 };
