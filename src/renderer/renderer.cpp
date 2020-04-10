@@ -5,7 +5,7 @@
 
 Renderer::Renderer()
 {
-    shader_.compile_shader("../shaders/basic.vert.glsl", "../shaders/basic.frag.glsl");
+    assert(shader_.compile_shader("../shaders/basic.vert.glsl", "../shaders/basic.frag.glsl"));
 
     float tmp_vertices[] = {
          0.5f,  0.5f, 0.0f,  // top right

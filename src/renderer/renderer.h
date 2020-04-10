@@ -10,11 +10,7 @@
 class Renderer {
 public:
     Renderer();
-
     void render();
-    bool check_shader(unsigned int shader);
-    bool check_program();
-
 private:
     std::vector<float> vertices_;
     std::vector<float> uv_;
