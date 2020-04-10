@@ -3,6 +3,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include "spdlog/spdlog.h"
+
 #include <iostream>
 #include <cassert>
 
@@ -12,6 +14,7 @@
 
 Renderer::Renderer()
 {
+    spdlog::info("Initializing Renderer...");
     assert(shader_.compile_shader("../shaders/basic.vert.glsl", "../shaders/basic.frag.glsl"));
 
     float tmp_vertices[] = {
@@ -45,6 +48,8 @@ Renderer::Renderer()
         indices_.push_back(i);
     }
 
+    spdlog::info("Creating buffers...");
+
     glGenVertexArrays(1, &vao_);
     glGenBuffers(1, &vbo_pos_);
     glGenBuffers(1, &vbo_uv_);
@@ -73,7 +78,7 @@ Renderer::Renderer()
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0);
 
-    // -- Texture --
+    spdlog::info("Creating texture...");
     glGenTextures(1, &texture_);
     glBindTexture(GL_TEXTURE_2D, texture_);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -90,7 +95,7 @@ Renderer::Renderer()
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
-        std::cout << "Failed to load texture" << std::endl;
+        spdlog::critical("Loading texture failed!");
         assert(0);
     }
     stbi_image_free(data);

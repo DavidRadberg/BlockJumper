@@ -1,5 +1,6 @@
 
 #include "shader.h"
+#include "spdlog/spdlog.h"
 
 #include <glad/glad.h>
 
@@ -10,6 +11,8 @@
 
 
 bool Shader::compile_shader(const char* vertexPath, const char* fragmentPath) {
+    spdlog::info("Compiling shader...");
+
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
     std::string fragmentCode;
@@ -34,7 +37,7 @@ bool Shader::compile_shader(const char* vertexPath, const char* fragmentPath) {
         fragmentCode = fShaderStream.str();
     }
     catch (std::ifstream::failure& e) {
-        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+        spdlog::critical("Shader error file read unsuccessful!");
         return false;
     }
     const char* vShaderCode = vertexCode.c_str();
@@ -97,7 +100,7 @@ bool Shader::check_compilation(unsigned int shader, std::string type) {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success) {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+            spdlog::critical("Compilation of shader unsuccessful!\n {}", infoLog);
             return false;
         }
     }
@@ -105,7 +108,7 @@ bool Shader::check_compilation(unsigned int shader, std::string type) {
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
         if (!success) {
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+            spdlog::critical("Compilation of program unsuccessful!\n {}", infoLog);
             return false;
         }
     }
