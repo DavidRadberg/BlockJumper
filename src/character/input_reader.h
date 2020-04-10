@@ -11,4 +11,5 @@ public:
 
 private:
     GLFWwindow * window_;
+    GLFWgamepadstate state_;
 };
