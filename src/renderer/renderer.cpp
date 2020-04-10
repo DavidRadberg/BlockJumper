@@ -6,6 +6,10 @@
 #include <iostream>
 #include <cassert>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 Renderer::Renderer()
 {
     assert(shader_.compile_shader("../shaders/basic.vert.glsl", "../shaders/basic.frag.glsl"));
@@ -91,11 +95,8 @@ Renderer::Renderer()
     }
     stbi_image_free(data);
 
-    // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
-    // -------------------------------------------------------------------------------------------
     shader_.run(); // don't forget to activate/use the shader before setting uniforms!
-    // either set it manually like so:
-    glUniform1i(glGetUniformLocation(shader_.get_id(), "texture1"), 0);
+    glUniform1i(glGetUniformLocation(shader_.get_id(), "aTex"), 0);
 }
 
 void Renderer::render()
@@ -106,8 +107,14 @@ void Renderer::render()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_);
 
+    // create transformations
+    glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+    transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
     shader_.run();
+    shader_.set_mat4("transform", transform);
+
     glBindVertexArray(vao_);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    
 }
