@@ -18,10 +18,20 @@ Renderer::Renderer(Camera & camera) : camera_(camera)
     assert(shader_.compile_shader("../shaders/basic.vert.glsl", "../shaders/basic.frag.glsl"));
 
     float tmp_vertices[] = {
-         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left
+        0.0,  0.0, 0.0,
+        1.0,  0.0, 0.0,
+        1.0,  1.0, 0.0,
+        0.0,  1.0, 0.0,
+
+        0.0,  0.0, 1.0,
+        1.0,  0.0, 1.0,
+        1.0,  1.0, 1.0,
+        0.0,  1.0, 1.0,
+
+        0.0,  0.0, 1.0,
+        1.0,  0.0, 1.0,
+        1.0,  1.0, 1.0,
+        0.0,  1.0, 1.0
     };
 
     for (float v : tmp_vertices) {
@@ -29,19 +39,46 @@ Renderer::Renderer(Camera & camera) : camera_(camera)
     }
 
     float tmp_uv[] = {
-        1.0f, 1.0f,  // top right
-        1.0f, 0.0f,  // bottom right
-        0.0f, 0.0f,  // bottom left
-        0.0f, 1.0f   // top left
+        0.0,  0.0,
+        1.0,  0.0,
+        1.0,  1.0,
+        0.0,  1.0,
+
+        1.0,  0.0,
+        2.0,  0.0,
+        2.0,  1.0,
+        1.0,  1.0,
+
+        0.0, -1.0,
+        1.0, -1.0,
+        1.0,  2.0,
+        0.0,  2.0
     };
 
     for (float uv : tmp_uv) {
         uv_.push_back(uv);
     }
 
-    unsigned int tmp_indices[] = {  // note that we start from 0!
-        0, 1, 3,   // first triangle
-        1, 2, 3    // second triangle
+    unsigned int tmp_indices[] = {
+        // sides
+        0, 1, 2,
+        2, 3, 0,
+
+        1, 5, 6,
+        6, 2, 1,
+
+        5, 4, 7,
+        7, 6, 5,
+
+        4, 0, 3,
+        3, 7, 4,
+
+        // top and bottom
+        8, 9, 1,
+        1, 0, 8,
+
+        3, 2, 10,
+        10, 11, 3
     };
 
     for (int i : tmp_indices) {
@@ -55,7 +92,6 @@ Renderer::Renderer(Camera & camera) : camera_(camera)
     glGenBuffers(1, &vbo_uv_);
     glGenBuffers(1, &ebo_);
 
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
     glBindVertexArray(vao_);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_pos_);
@@ -71,11 +107,7 @@ Renderer::Renderer(Camera & camera) : camera_(camera)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * indices_.size(), indices_.data(), GL_STATIC_DRAW);
 
-    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
-
-    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0);
 
     spdlog::info("Creating texture...");
@@ -88,8 +120,7 @@ Renderer::Renderer(Camera & camera) : camera_(camera)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+    stbi_set_flip_vertically_on_load(true);
     unsigned char *data = stbi_load("../data/textures/brick_wall.png", &width, &height, &nrChannels, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -100,27 +131,26 @@ Renderer::Renderer(Camera & camera) : camera_(camera)
     }
     stbi_image_free(data);
 
-    shader_.run(); // don't forget to activate/use the shader before setting uniforms!
+    shader_.run();
     glUniform1i(glGetUniformLocation(shader_.get_id(), "aTex"), 0);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 }
 
 void Renderer::render()
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_);
 
-    // create transformations
-    //glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    //transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-    //transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
     const glm::mat4 mvp = camera_.get_mvp();
 
     shader_.run();
     shader_.set_mat4("MVP", mvp);
 
     glBindVertexArray(vao_);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }

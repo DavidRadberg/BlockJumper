@@ -48,6 +48,7 @@ void Character::update_position(float dt)
 void Character::update_angles(float dt)
 {
     cam_angle_y_ += get_axis_input(GLFW_GAMEPAD_AXIS_RIGHT_Y) * dt * angle_speed_;
+    cam_angle_y_ = glm::clamp(cam_angle_y_, (float) -M_PI * 0.48f, (float) M_PI * 0.48f);
     cam_angle_zx_ += -get_axis_input(GLFW_GAMEPAD_AXIS_RIGHT_X) * dt * angle_speed_;
 }
 
