@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shader.h"
+#include "camera.h"
 
 #include <vector>
 
@@ -9,7 +10,7 @@
 
 class Renderer {
 public:
-    Renderer();
+    Renderer(Camera & camera);
     void render();
 private:
     std::vector<float> vertices_;
@@ -17,6 +18,7 @@ private:
     std::vector<int> indices_;
 
     Shader shader_;
+    Camera & camera_;
 
     unsigned int vbo_pos_;
     unsigned int vbo_uv_;

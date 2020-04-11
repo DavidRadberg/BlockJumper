@@ -1,6 +1,6 @@
 
 #include "renderer.h"
-#include "input_reader.h"
+#include "character.h"
 
 #include "spdlog/spdlog.h"
 
@@ -11,13 +11,6 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
-}
-
-void processInput(GLFWwindow *window)
-{
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, true);
-    }
 }
 
 int main()
@@ -43,14 +36,15 @@ int main()
     }
 
     glViewport(0, 0, 800, 600);
+    Camera camera(800, 600);
 
-    Renderer renderer;
-    InputReader input_reader(window);
+    Renderer renderer(camera);
+    Character character(window);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     while (!glfwWindowShouldClose(window)) {
-        input_reader.process_input();
+        character.process_input();
         renderer.render();
 
         glfwSwapBuffers(window);

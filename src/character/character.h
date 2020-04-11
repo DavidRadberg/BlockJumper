@@ -3,9 +3,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-class InputReader {
+class Character {
 public:
-    InputReader(GLFWwindow * window) : window_(window) {};
+    Character(GLFWwindow * window) : window_(window) {};
 
     void process_input();
 

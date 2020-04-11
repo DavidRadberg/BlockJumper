@@ -12,7 +12,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Renderer::Renderer()
+Renderer::Renderer(Camera & camera) : camera_(camera)
 {
     spdlog::info("Initializing Renderer...");
     assert(shader_.compile_shader("../shaders/basic.vert.glsl", "../shaders/basic.frag.glsl"));
@@ -113,12 +113,13 @@ void Renderer::render()
     glBindTexture(GL_TEXTURE_2D, texture_);
 
     // create transformations
-    glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-    transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    //glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    //transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+    //transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    const glm::mat4 mvp = camera_.get_mvp();
 
     shader_.run();
-    shader_.set_mat4("transform", transform);
+    shader_.set_mat4("MVP", mvp);
 
     glBindVertexArray(vao_);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
