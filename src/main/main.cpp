@@ -15,6 +15,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 int main()
 {
+    int width = 1200;
+    int height = 900;
+
     spdlog::info("Initializing GLFW...");
 
     glfwInit();
@@ -22,7 +25,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);    
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
     if (window == NULL) {
         spdlog::critical("Failed to create GLFW window");
         glfwTerminate();
@@ -35,11 +38,11 @@ int main()
         return -1;
     }
 
-    glViewport(0, 0, 800, 600);
-    Camera camera(800, 600);
+    glViewport(0, 0, width, height);
 
+    Camera camera(width, height);
+    Character character(window, camera);
     Renderer renderer(camera);
-    Character character(window);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
