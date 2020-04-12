@@ -3,7 +3,7 @@
 #include "spdlog/spdlog.h"
 
 Block::Block(const glm::vec3 & base_point, const glm::vec3 & opposite_point, TEXTURES texture, bool norm_texture)
-    : base_point_(base_point), opposite_point_(opposite_point), texture_(texture), norm_texture_(norm_texture)
+    : Object(), base_point_(base_point), opposite_point_(opposite_point), norm_texture_(norm_texture)
 {
     glm::vec3 diff = glm::abs(base_point_ - opposite_point_);
     if (diff.x == 0.0 || diff.y == 0.0|| diff.z == 0.0) {
@@ -62,8 +62,8 @@ Block::Block(const glm::vec3 & base_point, const glm::vec3 & opposite_point, TEX
         2 * uv_x + 2 * uv_z, uv_y
     };
 
-    for (float uv : tmp_uv) {
-        uv_.push_back(uv);
+    for (float f : tmp_uv) {
+        uv_.push_back(f);
     }
 
     unsigned int tmp_indices[] = {
@@ -91,9 +91,6 @@ Block::Block(const glm::vec3 & base_point, const glm::vec3 & opposite_point, TEX
     for (int i : tmp_indices) {
         indices_.push_back(i);
     }
-}
 
-const char * Block::get_texture_path()
-{
-    return Textures::get_texture_path(texture_);
+    texture_ = texture;
 }

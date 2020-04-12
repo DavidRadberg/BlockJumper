@@ -1,6 +1,8 @@
 
 #include "renderer.h"
 #include "character.h"
+#include "object.h"
+#include "block.h"
 
 #include "spdlog/spdlog.h"
 
@@ -42,14 +44,20 @@ int main()
 
     Camera camera(width, height);
     Character character(window, camera);
-    Block block(glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, -2.0, 3.0), TEXTURES::BRICK_TEXTURE, true);
+    Block block(glm::vec3(-50.0, 0.0, -50.0), glm::vec3(50.0, -1.0, 50.0), TEXTURES::GRASS, true);
+    Block block2(glm::vec3(0.0, 0.0, 0.0), glm::vec3(7.0, 3.0, 6.0), TEXTURES::STONE, true);
     Renderer renderer(camera, block);
+    Renderer renderer2(camera, block2);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     while (!glfwWindowShouldClose(window)) {
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         character.process_input();
         renderer.render();
+        renderer2.render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

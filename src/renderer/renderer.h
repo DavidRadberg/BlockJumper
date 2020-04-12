@@ -2,7 +2,7 @@
 
 #include "shader.h"
 #include "camera.h"
-#include "block.h"
+#include "object.h"
 
 #include <vector>
 
@@ -11,13 +11,13 @@
 
 class Renderer {
 public:
-    Renderer(Camera & camera, Block & block);
+    Renderer(Camera & camera, Object & object);
     void render();
 
 private:
     Shader shader_;
     Camera & camera_;
-    Block block_;
+    Object & object_;
 
     unsigned int vbo_pos_;
     unsigned int vbo_uv_;

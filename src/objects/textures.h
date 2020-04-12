@@ -3,16 +3,26 @@
 
 #include <string>
 
-enum TEXTURES { BRICK_TEXTURE };
+enum TEXTURES { BRICK, SAND, GRASS, BLUE, GRANITE, STONE };
 
 class Textures {
 public:
     static constexpr char const * get_texture_path(TEXTURES texture) {
         switch(texture) {
-            case TEXTURES::BRICK_TEXTURE:
+            case TEXTURES::BRICK:
                 return "../data/textures/brick_wall.png";
+            case TEXTURES::SAND:
+                return "../data/textures/sand.png";
+            case TEXTURES::GRASS:
+                return "../data/textures/grass.png";
+            case TEXTURES::BLUE:
+                return "../data/textures/blue.jpg";
+            case TEXTURES::GRANITE:
+                return "../data/textures/granite.jpg";
+            case TEXTURES::STONE:
+                return "../data/textures/stone.jpg";
             default:
-                return "../data/textures/brick_wall.png";
+                return "../data/textures/grass.png";
         }
     };
 };

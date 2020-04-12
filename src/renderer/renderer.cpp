@@ -12,7 +12,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Renderer::Renderer(Camera & camera, Block & block) : camera_(camera), block_(block)
+Renderer::Renderer(Camera & camera, Object & object) : camera_(camera), object_(object)
 {
     spdlog::info("Initializing Renderer...");
     assert(shader_.compile_shader("../shaders/basic.vert.glsl", "../shaders/basic.frag.glsl"));
@@ -27,17 +27,17 @@ Renderer::Renderer(Camera & camera, Block & block) : camera_(camera), block_(blo
     glBindVertexArray(vao_);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_pos_);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * block_.get_vertices().size(), block_.get_vertices().data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * object_.get_vertices().size(), object_.get_vertices().data(), GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_uv_);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * block_.get_uv().size(), block_.get_uv().data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * object_.get_uv().size(), object_.get_uv().data(), GL_STATIC_DRAW);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * block_.get_indices().size(), block_.get_indices().data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * object_.get_indices().size(), object_.get_indices().data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -53,7 +53,7 @@ Renderer::Renderer(Camera & camera, Block & block) : camera_(camera), block_(blo
 
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load(block_.get_texture_path(), &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load(object_.get_texture_path(), &width, &height, &nrChannels, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -66,16 +66,17 @@ Renderer::Renderer(Camera & camera, Block & block) : camera_(camera), block_(blo
     shader_.run();
     glUniform1i(glGetUniformLocation(shader_.get_id(), "aTex"), 0);
 
+    glBindTexture(GL_TEXTURE_2D, 0);
+
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 }
 
 void Renderer::render()
 {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glActiveTexture(GL_TEXTURE0);
+
+    glActiveTexture(GL_TEXTURE);
     glBindTexture(GL_TEXTURE_2D, texture_);
 
     const glm::mat4 mvp = camera_.get_mvp();
@@ -84,5 +85,5 @@ void Renderer::render()
     shader_.set_mat4("MVP", mvp);
 
     glBindVertexArray(vao_);
-    glDrawElements(GL_TRIANGLES, block_.get_indices().size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, object_.get_indices().size(), GL_UNSIGNED_INT, 0);
 }

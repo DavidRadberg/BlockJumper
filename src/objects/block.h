@@ -2,27 +2,18 @@
 #pragma once
 
 #include "textures.h"
+#include "object.h"
 
 #include <glm/glm.hpp>
 #include <vector>
 
-class Block {
+class Block : public Object {
 public:
-    Block(const glm::vec3 & base_point, const glm::vec3 & opposite_point, TEXTURES texture = TEXTURES::BRICK_TEXTURE, bool norm_texture = true);
-
-    const std::vector<float> & get_vertices() { return vertices_; };
-    const std::vector<float> & get_uv() { return uv_; };
-    const std::vector<int> & get_indices() { return indices_; };
-    const char * get_texture_path();
+    Block(const glm::vec3 & base_point, const glm::vec3 & opposite_point, TEXTURES texture = TEXTURES::STONE, bool norm_texture = true);
 
 private:
     glm::vec3 base_point_;
     glm::vec3 opposite_point_;
 
-    std::vector<float> vertices_;
-    std::vector<float> uv_;
-    std::vector<int> indices_;
-
-    TEXTURES texture_;
     bool norm_texture_;
 };
