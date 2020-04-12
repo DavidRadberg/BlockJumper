@@ -2,6 +2,7 @@
 
 #include "shader.h"
 #include "camera.h"
+#include "block.h"
 
 #include <vector>
 
@@ -10,15 +11,13 @@
 
 class Renderer {
 public:
-    Renderer(Camera & camera);
+    Renderer(Camera & camera, Block & block);
     void render();
-private:
-    std::vector<float> vertices_;
-    std::vector<float> uv_;
-    std::vector<int> indices_;
 
+private:
     Shader shader_;
     Camera & camera_;
+    Block block_;
 
     unsigned int vbo_pos_;
     unsigned int vbo_uv_;
