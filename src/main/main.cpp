@@ -42,7 +42,7 @@ int main()
 
     Camera camera(width, height);
     Character character(window, camera);
-    Block block(glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 1.0, 1.0), TEXTURES::BRICK_TEXTURE, true);
+    Block block(glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, -2.0, 3.0), TEXTURES::BRICK_TEXTURE, true);
     Renderer renderer(camera, block);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
