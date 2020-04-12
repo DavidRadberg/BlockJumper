@@ -11,12 +11,12 @@
 
 class Renderer {
 public:
-    Renderer(Camera & camera, Object & object);
+    Renderer(const Camera & camera, Object & object);
     void render();
 
 private:
     Shader shader_;
-    Camera & camera_;
+    const Camera & camera_;
     Object & object_;
 
     unsigned int vbo_pos_;

@@ -6,10 +6,9 @@
 #include <GLFW/glfw3.h>
 
 
-Camera::Camera(int width, int height, float fov) 
-    : width_(width), height_(height)
+Camera::Camera(float aspect, float fov, float z_near, float z_far)
 {
-    projection_ = glm::perspective(glm::radians(fov), (float) width_ / (float) height, z_near_, z_far_);
+    projection_ = glm::perspective(glm::radians(fov), aspect, z_near, z_far);
     update_mvp();
 }
 

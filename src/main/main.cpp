@@ -1,7 +1,7 @@
 
 #include "renderer.h"
 #include "character.h"
-#include "object.h"
+#include "scene.h"
 #include "block.h"
 
 #include "spdlog/spdlog.h"
@@ -42,25 +42,24 @@ int main()
 
     glViewport(0, 0, width, height);
 
-    Camera camera(width, height);
-    Character character(window, camera);
+    Scene scene(window, (float) width / (float) height, 60.0);
+
     Block block(glm::vec3(-50.0, 0.0, -50.0), glm::vec3(50.0, -1.0, 50.0), TEXTURES::GRASS, true);
+    scene.add_object(block);
+
     Block block2(glm::vec3(0.0, 0.0, 0.0), glm::vec3(7.0, 3.0, 6.0), TEXTURES::STONE, true);
-    Renderer renderer(camera, block);
-    Renderer renderer2(camera, block2);
+    scene.add_object(block2);
+
+    Block block3(glm::vec3(-2.0, 0.0, -1.0), glm::vec3(-4.0, 2.0, 1.0), TEXTURES::STONE, true);
+    scene.add_object(block3);
+
+    Block block4(glm::vec3(-2.0, 0.0, -10.0), glm::vec3(-4.0, 4.0, -12.0), TEXTURES::STONE, true);
+    scene.add_object(block4);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     while (!glfwWindowShouldClose(window)) {
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        character.process_input();
-        renderer.render();
-        renderer2.render();
-
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        scene.render_scene();
     }
 
     glfwTerminate();

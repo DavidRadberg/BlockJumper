@@ -12,7 +12,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Renderer::Renderer(Camera & camera, Object & object) : camera_(camera), object_(object)
+Renderer::Renderer(const Camera & camera, Object & object)
+    : camera_(camera), object_(object)
 {
     spdlog::info("Initializing Renderer...");
     assert(shader_.compile_shader("../shaders/basic.vert.glsl", "../shaders/basic.frag.glsl"));
@@ -68,8 +69,7 @@ Renderer::Renderer(Camera & camera, Object & object) : camera_(camera), object_(
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+
 }
 
 void Renderer::render()
