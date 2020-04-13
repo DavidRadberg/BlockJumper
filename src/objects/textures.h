@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum TEXTURES { BRICK, SAND, GRASS, BLUE, GRANITE, STONE };
+enum TEXTURES { BRICK, SAND, GRASS, BLUE, GRANITE, STONE, MARIO_MAIN };
 
 class Textures {
 public:
@@ -21,6 +21,8 @@ public:
                 return "../data/textures/granite.jpg";
             case TEXTURES::STONE:
                 return "../data/textures/stone.jpg";
+            case TEXTURES::MARIO_MAIN:
+                return "../data/obj/Textures/mario_main.png";
             default:
                 return "../data/textures/grass.png";
         }

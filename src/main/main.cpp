@@ -3,6 +3,7 @@
 #include "character.h"
 #include "scene.h"
 #include "block.h"
+#include "mesh.h"
 
 #include "spdlog/spdlog.h"
 
@@ -55,6 +56,9 @@ int main()
 
     Block block4(glm::vec3(-2.0, 0.0, -10.0), glm::vec3(-4.0, 4.0, -12.0), TEXTURES::STONE, true);
     scene.add_object(block4);
+
+    Mesh mario(MESHES::MARIO, TEXTURES::MARIO_MAIN);
+    scene.add_object(mario);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
