@@ -1,0 +1,42 @@
+
+=============================================
+
+ ------------------- WIP -------------------
+
+=============================================
+
+    BlockJumper
+
+The aim of this project is to create some kind of
+3D game using C++ and openGL for education (and fun?).
+
+The project is a WIP that may never be finished...
+
+So far we have a renderer that can load blocks with texture
+and/or .obj objects, and a camera that can be controller by
+a gamepad controller (keyboard controls not implemented yet).
+
+    Building
+
+The project requires glfw 3.3 that I currently build from source, glad and glm.
+build with:
+mkdir build; cd build
+cmake ..; make
+
+start controller drivers, for example with:
+sudo xboxdrv --silent
+
+and then (from separate terminal)
+./BlockJumper
+
+    3rd-party
+
+All 3rd party code is located in src/3rd-party. These are:
+
+OBJ-Loader (https://github.com/Bly7/OBJ-Loader)
+stb (https://github.com/nothings/stb)
+spdlog (https://github.com/gabime/spdlog)
+
+resources located in data:
+
+mario obj model: https://www.turbosquid.com/3d-models/free-mario-bros-3d-model/621837
