@@ -18,7 +18,7 @@ private:
     glm::vec3 lookat_ = glm::vec3(0.0, 0.0, 0.0);
     float angle_zx_ = 0.0; // angle in xz plane
     float angle_y_ = 0.2 * M_PI; // angle along y axis
-    float radius_ = 3.0;
+    float radius_ = 5.0;
 
     glm::mat4 projection_;
     glm::mat4 mvp_;

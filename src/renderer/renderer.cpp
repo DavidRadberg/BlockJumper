@@ -28,7 +28,7 @@ Renderer::Renderer(const Camera & camera, Object & object)
     glBindVertexArray(vao_);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_pos_);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * object_.get_vertices().size(), object_.get_vertices().data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * object_.get_vertices().size(), object_.get_vertices().data(), GL_DYNAMIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);
 
@@ -74,7 +74,8 @@ Renderer::Renderer(const Camera & camera, Object & object)
 
 void Renderer::render()
 {
-
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos_);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * object_.get_vertices().size(), object_.get_vertices().data(), GL_DYNAMIC_DRAW);
 
     glActiveTexture(GL_TEXTURE);
     glBindTexture(GL_TEXTURE_2D, texture_);

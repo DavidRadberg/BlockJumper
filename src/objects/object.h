@@ -14,6 +14,12 @@ public:
     const std::vector<int> & get_indices() { return indices_; };
     const char * get_texture_path() { return Textures::get_texture_path(texture_); };
 
+    const BoundingBox & get_bb() { return bb_; };
+
+    void set_position(const glm::vec3 & pos);
+    void transpose(const glm::vec3 & diff);
+    void scale(float factor);
+
 protected:
     std::vector<float> vertices_;
     std::vector<float> uv_;
@@ -21,4 +27,6 @@ protected:
 
     TEXTURES texture_;
     BoundingBox bb_;
+
+    void update_bb();
 };

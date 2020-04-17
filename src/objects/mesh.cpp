@@ -22,24 +22,11 @@ Mesh::Mesh(MESHES mesh, TEXTURES texture)
     update_bb();
     transpose(-bb_.get_base());
 
+    scale(height_ / bb_.get_size().y);
+
     for (unsigned int i : loaded_mesh.Indices) {
         indices_.push_back(i);
     }
 
     texture_ = texture;
-}
-
-void Mesh::update_bb() {
-    for (int i = 0; i < vertices_.size(); i+=3) {
-        bb_.add_point(glm::vec3(vertices_[i], vertices_[i + 1], vertices_[1 + 2]));
-    }
-}
-
-void Mesh::transpose(const glm::vec3 & diff) {
-    for (int i = 0; i < vertices_.size(); i+=3) {
-        vertices_[i] += diff.x;
-        vertices_[i + 1] += diff.y;
-        vertices_[i + 2] += diff.z;
-    }
-    update_bb();
 }

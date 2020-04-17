@@ -2,10 +2,10 @@
 #include "scene.h"
 #include "spdlog/spdlog.h"
 
-Scene::Scene(GLFWwindow * window, float aspect, float fov)
-    : window_(window), camera_(aspect, fov), renderer_(window_, camera_), character_(window_, camera_)
+Scene::Scene(GLFWwindow * window, Object & main_object, float aspect, float fov)
+    : window_(window), camera_(aspect, fov), renderer_(window_, camera_), character_(window_, camera_, main_object)
 {
-
+    add_object(main_object);
 }
 
 void Scene::add_object(Object & object)

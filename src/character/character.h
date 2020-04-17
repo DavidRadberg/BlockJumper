@@ -2,6 +2,7 @@
 #pragma once
 
 #include "camera.h"
+#include "object.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -9,7 +10,7 @@
 
 class Character {
 public:
-    Character(GLFWwindow * window, Camera & camera);
+    Character(GLFWwindow * window, Camera & camera, Object & object);
 
     void process_input();
     const glm::vec3 & get_position() const { return position_; };
@@ -17,6 +18,7 @@ public:
 private:
     GLFWwindow * window_;
     Camera & camera_;
+    Object & object_;
     GLFWgamepadstate state_;
 
     float last_process_;

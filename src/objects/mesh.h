@@ -11,8 +11,8 @@ class Mesh : public Object {
 public:
     Mesh(MESHES mesh, TEXTURES texture);
 
-    void transpose(const glm::vec3 & diff);
-
 private:
-    void update_bb();
+
+
+    float height_ = 2.0;
 };

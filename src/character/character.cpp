@@ -3,9 +3,10 @@
 #include "spdlog/spdlog.h"
 
 
-Character::Character(GLFWwindow * window, Camera & camera) : window_(window), camera_(camera)
+Character::Character(GLFWwindow * window, Camera & camera, Object & object)
+    : window_(window), camera_(camera), object_(object)
 {
-    position_ = glm::vec3(0.0, 0.0, 0.0);
+    position_ = object_.get_bb().get_mid();
     last_process_ = glfwGetTime();
 }
 
@@ -17,7 +18,7 @@ void Character::process_input()
     last_process_ = glfwGetTime();
 
     glfwGetGamepadState(GLFW_JOYSTICK_1, &state_);
-    
+
     if (state_.buttons[GLFW_GAMEPAD_BUTTON_START] || glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         spdlog::info("Closing glfw window");
         glfwSetWindowShouldClose(window_, true);
@@ -28,6 +29,7 @@ void Character::process_input()
     camera_.update_lookat(position_);
     camera_.update_angles(cam_angle_zx_, cam_angle_y_);
     camera_.update_mvp();
+    object_.set_position(position_);
 }
 
 void Character::update_position(float dt)
