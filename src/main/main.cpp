@@ -48,7 +48,7 @@ int main()
     Block block(glm::vec3(-50.0, 0.0, -50.0), glm::vec3(50.0, -1.0, 50.0), TEXTURES::GRASS, true);
     scene.add_object(block);
 
-    Block block2(glm::vec3(0.0, 0.0, 0.0), glm::vec3(7.0, 3.0, 6.0), TEXTURES::STONE, true);
+    Block block2(glm::vec3(10.0, 10.0, 0.0), glm::vec3(7.0, 3.0, 6.0), TEXTURES::STONE, true);
     scene.add_object(block2);
 
     Block block3(glm::vec3(-2.0, 0.0, -1.0), glm::vec3(-4.0, 2.0, 1.0), TEXTURES::STONE, true);

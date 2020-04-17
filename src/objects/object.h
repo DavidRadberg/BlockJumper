@@ -2,6 +2,7 @@
 #pragma once
 
 #include "textures.h"
+#include "bounding_box.h"
 
 #include <vector>
 #include <glm/glm.hpp>
@@ -19,4 +20,5 @@ protected:
     std::vector<int> indices_;
 
     TEXTURES texture_;
+    BoundingBox bb_;
 };
