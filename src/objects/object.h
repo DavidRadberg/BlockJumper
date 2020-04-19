@@ -16,7 +16,13 @@ public:
 
     const BoundingBox & get_bb() { return bb_; };
 
+    glm::vec3 get_mid() const { return bb_.get_mid(); };
+    glm::vec3 get_base() const { return bb_.get_base(); };
+    glm::vec3 get_size() const { return bb_.get_size(); };
+
+
     void set_position(const glm::vec3 & pos);
+    void set_rotation(float xz, float y = 0.0);
     void transpose(const glm::vec3 & diff);
     void scale(float factor);
 
@@ -28,5 +34,9 @@ protected:
     TEXTURES texture_;
     BoundingBox bb_;
 
+    float angle_xz_ = 0.0;
+    float angle_y_ = 0.0;
+
     void update_bb();
+    void rotate(float xz, float y = 0.0);
 };

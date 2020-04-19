@@ -23,6 +23,7 @@ private:
 
     float last_process_;
     glm::vec3 position_;
+    float direction_ = 0.0;
     float cam_angle_y_ = 0.1;
     float cam_angle_zx_ = 0.0;
 
@@ -30,7 +31,7 @@ private:
     void update_angles(float dt);
     float get_axis_input(int axis);
 
-    float move_speed_ = 3.0;
-    float angle_speed_ = 1.5;
+    float move_speed_ = 5.0;
+    float angle_speed_ = 2.0;
     float epsilon_ = 0.2;
 };

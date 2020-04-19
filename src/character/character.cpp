@@ -6,7 +6,7 @@
 Character::Character(GLFWwindow * window, Camera & camera, Object & object)
     : window_(window), camera_(camera), object_(object)
 {
-    position_ = object_.get_bb().get_mid();
+    position_ = object_.get_mid();
     last_process_ = glfwGetTime();
 }
 
@@ -30,6 +30,7 @@ void Character::process_input()
     camera_.update_angles(cam_angle_zx_, cam_angle_y_);
     camera_.update_mvp();
     object_.set_position(position_);
+    object_.set_rotation(direction_);
 }
 
 void Character::update_position(float dt)
@@ -42,6 +43,19 @@ void Character::update_position(float dt)
     // movement is relative to cam angle
     movement.x =  glm::cos(cam_angle_zx_) * input_x + glm::sin(cam_angle_zx_) * input_y;
     movement.z = -glm::sin(cam_angle_zx_) * input_x + glm::cos(cam_angle_zx_) * input_y;
+
+   if (movement.z != 0.0 || movement.x != 0.0) {
+       if (movement.x == 0.0) {
+           direction_ = movement.z > 0.0 ? 0.0 : M_PI;
+       } else if (movement.z == 0.0) {
+           direction_ = movement.x > 0.0 ? -0.5 * M_PI : 0.5 * M_PI;
+       } else {
+           direction_ = glm::atan(-movement.x / movement.z);
+           if (movement.z < 0.0) {
+               direction_ += M_PI;
+           }
+       }
+   }
 
     movement.y = (float) state_.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER] - (float) state_.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER];
     position_ += movement * dt * move_speed_;
