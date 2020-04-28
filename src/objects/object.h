@@ -18,7 +18,10 @@ public:
 
     glm::vec3 get_mid() const { return bb_.get_mid(); };
     glm::vec3 get_base() const { return bb_.get_base(); };
+    glm::vec3 get_top() const { return bb_.get_top(); };
     glm::vec3 get_size() const { return bb_.get_size(); };
+
+    bool inside_plane(const glm::vec2 & pos) const;
 
 
     void set_position(const glm::vec3 & pos);

@@ -9,7 +9,7 @@ class Scene {
 public:
     Scene(GLFWwindow * window, Object & main_object, float aspect = 1.6, float fov = 60.0);
 
-    void add_object(Object & object);
+    void add_object(Object & object, bool main = false);
     void render_scene();
 private:
     GLFWwindow * window_;

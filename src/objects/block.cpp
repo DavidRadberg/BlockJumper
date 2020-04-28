@@ -93,4 +93,5 @@ Block::Block(const glm::vec3 & base_point, const glm::vec3 & opposite_point, TEX
     }
 
     texture_ = texture;
+    update_bb();
 }

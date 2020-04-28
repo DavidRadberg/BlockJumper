@@ -1,7 +1,9 @@
 
 #include "bounding_box.h"
+#include "spdlog/spdlog.h"
 
-void BoundingBox::add_point(const glm::vec3 & point) {
+void BoundingBox::add_point(const glm::vec3 & point)
+{
     if (!initialized_) {
         min_ = point;
         max_ = point;
@@ -24,4 +26,10 @@ void BoundingBox::transpose(const glm::vec3 & diff) {
 void BoundingBox::scale(float factor) {
     min_ *= factor;
     max_ *= factor;
+}
+
+void BoundingBox::dbg_print() const
+{
+    spdlog::info("bb min is {}, {}, {}", min_.x, min_.y, min_.z);
+    spdlog::info("bb max is {}, {}, {}", max_.x, max_.y, max_.z);
 }

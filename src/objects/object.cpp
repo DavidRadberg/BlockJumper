@@ -1,10 +1,11 @@
 
 #include "object.h"
+#include "spdlog/spdlog.h"
 
 void Object::update_bb() {
     bb_.reset();
     for (int i = 0; i < vertices_.size(); i+=3) {
-        bb_.add_point(glm::vec3(vertices_[i], vertices_[i + 1], vertices_[1 + 2]));
+        bb_.add_point(glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]));
     }
 }
 
@@ -46,5 +47,15 @@ void Object::rotate(float xz, float y)
 
         vertices_[i] = mid.x + diff_x * glm::cos(xz) - diff_z * glm::sin(xz);
         vertices_[i + 2] = mid.z + diff_x * glm::sin(xz) + diff_z * glm::cos(xz);
+    }
+}
+
+bool Object::inside_plane(const glm::vec2 & pos) const
+{
+    if (pos.x > bb_.get_min().x && pos.y > bb_.get_min().z &&
+        pos.x < bb_.get_max().x && pos.y < bb_.get_max().z) {
+        return true;
+    } else {
+        return false;
     }
 }

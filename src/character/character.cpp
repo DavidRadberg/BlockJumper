@@ -11,20 +11,20 @@ Character::Character(GLFWwindow * window, Camera & camera, Object & object)
 }
 
 
-void Character::process_input()
+void Character::process_input(const std::vector<Object> & objects)
 {
     // run sudo xboxdrv --silent to start xbox control driver
     float dt = glfwGetTime() - last_process_;
     last_process_ = glfwGetTime();
 
-    glfwGetGamepadState(GLFW_JOYSTICK_1, &state_);
+    glfwGetGamepadState(GLFW_JOYSTICK_1, &gamepad_state_);
 
-    if (state_.buttons[GLFW_GAMEPAD_BUTTON_START] || glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    if (gamepad_state_.buttons[GLFW_GAMEPAD_BUTTON_START] || glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         spdlog::info("Closing glfw window");
         glfwSetWindowShouldClose(window_, true);
     }
 
-    update_position(dt);
+    update_position(dt, objects);
     update_angles(dt);
     camera_.update_lookat(position_);
     camera_.update_angles(cam_angle_zx_, cam_angle_y_);
@@ -33,12 +33,13 @@ void Character::process_input()
     object_.set_rotation(direction_);
 }
 
-void Character::update_position(float dt)
+void Character::update_position(float dt, const std::vector<Object> & objects)
 {
     glm::vec3 movement;
 
     float input_x = get_axis_input(GLFW_GAMEPAD_AXIS_LEFT_X);
     float input_y = get_axis_input(GLFW_GAMEPAD_AXIS_LEFT_Y);
+    update_state(objects);
 
     // movement is relative to cam angle
     movement.x =  glm::cos(cam_angle_zx_) * input_x + glm::sin(cam_angle_zx_) * input_y;
@@ -57,8 +58,16 @@ void Character::update_position(float dt)
        }
    }
 
-    movement.y = (float) state_.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER] - (float) state_.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER];
+    if (debug_mode_) {
+        movement.y = (float) gamepad_state_.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER] - (float) gamepad_state_.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER];
+    } else if (state_ == CHARACTER_STATE::STATE_JUMPING) {
+        movement.y = jump_speed_;
+    } else if (state_ == CHARACTER_STATE::STATE_FALLING) {
+        movement.y = -jump_speed_;
+    }
+
     position_ += movement * dt * move_speed_;
+
 }
 
 void Character::update_angles(float dt)
@@ -70,9 +79,43 @@ void Character::update_angles(float dt)
 
 float Character::get_axis_input(int axis)
 {
-    if (glm::abs(state_.axes[axis]) > epsilon_) {
-        return -state_.axes[axis];
+    if (glm::abs(gamepad_state_.axes[axis]) > epsilon_) {
+        return -gamepad_state_.axes[axis];
     } else {
         return 0.0;
+    }
+}
+
+float Character::get_ground_height(const std::vector<Object> & objects)
+{
+    float ground_height = position_.y - 1000.0;
+    for (const Object & obj : objects) {
+        if (obj.inside_plane(glm::vec2(position_.x, position_.z))) {
+            float height = obj.get_top().y;
+            if (height > ground_height && height < object_.get_top().y) {
+                ground_height = height;
+            }
+        }
+    }
+
+    return ground_height;
+}
+
+void Character::update_state(const std::vector<Object> & objects)
+{
+    float cur_time = glfwGetTime();
+    float dt = cur_time - prev_state_time_;
+    if (gamepad_state_.buttons[GLFW_GAMEPAD_BUTTON_A] && state_ == CHARACTER_STATE::STATE_STANDING) {
+        state_ = CHARACTER_STATE::STATE_JUMPING;
+        prev_state_time_ = cur_time;
+    } else if (state_ == CHARACTER_STATE::STATE_JUMPING && dt > 0.3) {
+        state_ = CHARACTER_STATE::STATE_FALLING;
+        prev_state_time_ = cur_time;
+    } else if (state_ == CHARACTER_STATE::STATE_FALLING) {
+        float ground_height = get_ground_height(objects);
+        if ((ground_height + 0.2) > object_.get_base().y) {
+            state_ = CHARACTER_STATE::STATE_STANDING;
+            position_.y = position_.y - object_.get_base().y + ground_height;
+        }
     }
 }
