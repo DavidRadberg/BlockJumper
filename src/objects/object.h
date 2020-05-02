@@ -34,6 +34,7 @@ public:
     virtual void animate(const CharacterState & state) {};
 
     void rotate_points_x(const std::vector<int> points, glm::vec3 axis, float angle);
+    void rotate_points_z(const std::vector<int> points, glm::vec3 axis, float angle);
 
 protected:
     std::vector<float> org_vertices_;
@@ -56,4 +57,5 @@ protected:
     void scale_org(float factor);
 
     void reset_vertices();
+    void set_org_vertices();
 };

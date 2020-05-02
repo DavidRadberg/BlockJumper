@@ -84,6 +84,17 @@ void Object::rotate_points_x(const std::vector<int> points, glm::vec3 axis, floa
     }
 }
 
+void Object::rotate_points_z(const std::vector<int> points, glm::vec3 axis, float angle) {
+    float diff_x = 0.0, diff_y = 0.0;
+    for (int i : points) {
+        diff_x = vertices_[3 * i]    - axis.x;
+        diff_y = vertices_[3 * i + 1] - axis.y;
+
+        vertices_[3 * i]     = axis.x + diff_x * glm::cos(angle) - diff_y * glm::sin(angle);
+        vertices_[3 * i + 1] = axis.y + diff_x * glm::sin(angle) + diff_y * glm::cos(angle);
+    }
+}
+
 bool Object::inside_plane(const glm::vec2 & pos) const
 {
     if (pos.x > bb_.get_min().x && pos.y > bb_.get_min().z &&
@@ -98,4 +109,9 @@ void Object::reset_vertices() {
     vertices_ = org_vertices_;
     bb_ = org_bb_;
     angle_xz_ = 0.0;
+}
+
+void Object::set_org_vertices() {
+    org_vertices_ = vertices_;
+    org_bb_ = bb_;
 }

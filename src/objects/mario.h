@@ -12,6 +12,8 @@ public:
 private:
     std::vector<int> left_leg_indices_;
     std::vector<int> right_leg_indices_;
+    std::vector<int> left_arm_indices_;
+    std::vector<int> right_arm_indices_;
 
     float walk_state_ = 0.0;
 };
