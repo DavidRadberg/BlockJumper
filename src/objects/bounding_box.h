@@ -16,6 +16,7 @@ public:
     glm::vec3 get_base() const { return glm::vec3(0.5 * (min_.x + max_.x), min_.y, 0.5 * (min_.z + max_.z)); };
     glm::vec3 get_top() const { return glm::vec3(0.5 * (min_.x + max_.x), max_.y, 0.5 * (min_.z + max_.z)); };
     glm::vec3 get_size() const { return max_ - min_; };
+    void reset_position() { transpose(-get_min()); };
 
     void dbg_print() const;
 private:

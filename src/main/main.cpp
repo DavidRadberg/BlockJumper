@@ -3,7 +3,7 @@
 #include "character.h"
 #include "scene.h"
 #include "block.h"
-#include "mesh.h"
+#include "mario.h"
 
 #include "spdlog/spdlog.h"
 
@@ -43,7 +43,7 @@ int main()
 
     glViewport(0, 0, width, height);
 
-    Mesh mario(MESHES::MARIO, TEXTURES::MARIO_MAIN);
+    Mario mario(TEXTURES::MARIO_MAIN);
 
     Scene scene(window, mario, (float) width / (float) height, 60.0);
 

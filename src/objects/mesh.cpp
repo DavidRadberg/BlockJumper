@@ -15,14 +15,21 @@ Mesh::Mesh(MESHES mesh, TEXTURES texture)
         vertices_.push_back(vertex.Position.X);
         vertices_.push_back(vertex.Position.Z);
         vertices_.push_back(vertex.Position.Y);
+        org_vertices_.push_back(vertex.Position.X);
+        org_vertices_.push_back(vertex.Position.Z);
+        org_vertices_.push_back(vertex.Position.Y);
 
         uv_.push_back(vertex.TextureCoordinate.X);
         uv_.push_back(vertex.TextureCoordinate.Y);
     }
     update_bb();
+    update_org_bb();
+
     transpose(-bb_.get_base());
+    transpose_org(-org_bb_.get_base());
 
     scale(height_ / bb_.get_size().y);
+    scale_org(height_ / org_bb_.get_size().y);
 
     for (unsigned int i : loaded_mesh.Indices) {
         indices_.push_back(i);

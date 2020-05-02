@@ -3,12 +3,12 @@
 
 #include "camera.h"
 #include "object.h"
+#include "character_state.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-enum CHARACTER_STATE { STATE_STANDING, STATE_JUMPING, STATE_FALLING };
 
 class Character {
 public:
@@ -42,7 +42,7 @@ private:
     void update_state(const std::vector<Object> & objects);
 
     float prev_state_time_;
-    CHARACTER_STATE state_ = CHARACTER_STATE::STATE_STANDING;
+    CharacterState state_;
 
     bool debug_mode_ = false;
 };

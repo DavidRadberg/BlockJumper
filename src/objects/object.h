@@ -3,6 +3,7 @@
 
 #include "textures.h"
 #include "bounding_box.h"
+#include "character_state.h"
 
 #include <vector>
 #include <glm/glm.hpp>
@@ -29,17 +30,30 @@ public:
     void transpose(const glm::vec3 & diff);
     void scale(float factor);
 
+
+    virtual void animate(const CharacterState & state) {};
+
+    void rotate_points_x(const std::vector<int> points, glm::vec3 axis, float angle);
+
 protected:
+    std::vector<float> org_vertices_;
     std::vector<float> vertices_;
     std::vector<float> uv_;
     std::vector<int> indices_;
 
     TEXTURES texture_;
     BoundingBox bb_;
+    BoundingBox org_bb_;
 
     float angle_xz_ = 0.0;
     float angle_y_ = 0.0;
 
     void update_bb();
+    void update_org_bb();
     void rotate(float xz, float y = 0.0);
+
+    void transpose_org(const glm::vec3 & diff);
+    void scale_org(float factor);
+
+    void reset_vertices();
 };

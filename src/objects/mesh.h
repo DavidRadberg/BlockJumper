@@ -12,7 +12,5 @@ public:
     Mesh(MESHES mesh, TEXTURES texture);
 
 private:
-
-
     float height_ = 2.0;
 };

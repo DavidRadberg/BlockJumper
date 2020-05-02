@@ -14,8 +14,9 @@ Character::Character(GLFWwindow * window, Camera & camera, Object & object)
 void Character::process_input(const std::vector<Object> & objects)
 {
     // run sudo xboxdrv --silent to start xbox control driver
-    float dt = glfwGetTime() - last_process_;
-    last_process_ = glfwGetTime();
+    state_.t = glfwGetTime();
+    state_.dt = state_.t - last_process_;
+    last_process_ = state_.t;
 
     glfwGetGamepadState(GLFW_JOYSTICK_1, &gamepad_state_);
 
@@ -24,11 +25,12 @@ void Character::process_input(const std::vector<Object> & objects)
         glfwSetWindowShouldClose(window_, true);
     }
 
-    update_position(dt, objects);
-    update_angles(dt);
+    update_position(state_.dt, objects);
+    update_angles(state_.dt);
     camera_.update_lookat(position_);
     camera_.update_angles(cam_angle_zx_, cam_angle_y_);
     camera_.update_mvp();
+    object_.animate(state_);
     object_.set_position(position_);
     object_.set_rotation(direction_);
 }
@@ -60,14 +62,14 @@ void Character::update_position(float dt, const std::vector<Object> & objects)
 
     if (debug_mode_) {
         movement.y = (float) gamepad_state_.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER] - (float) gamepad_state_.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER];
-    } else if (state_ == CHARACTER_STATE::STATE_JUMPING) {
+    } else if (state_.is_jumping()) {
         movement.y = jump_speed_;
-    } else if (state_ == CHARACTER_STATE::STATE_FALLING) {
+    } else if (state_.is_falling()) {
         movement.y = -jump_speed_;
     }
 
     position_ += movement * dt * move_speed_;
-
+    state_.speed = glm::sqrt(input_x * input_x + input_y * input_y);
 }
 
 void Character::update_angles(float dt)
@@ -105,16 +107,16 @@ void Character::update_state(const std::vector<Object> & objects)
 {
     float cur_time = glfwGetTime();
     float dt = cur_time - prev_state_time_;
-    if (gamepad_state_.buttons[GLFW_GAMEPAD_BUTTON_A] && state_ == CHARACTER_STATE::STATE_STANDING) {
-        state_ = CHARACTER_STATE::STATE_JUMPING;
+    if (gamepad_state_.buttons[GLFW_GAMEPAD_BUTTON_A] && state_.is_standing()) {
+        state_.action = CharacterActions::JUMPING;
         prev_state_time_ = cur_time;
-    } else if (state_ == CHARACTER_STATE::STATE_JUMPING && dt > 0.3) {
-        state_ = CHARACTER_STATE::STATE_FALLING;
+    } else if (state_.is_jumping() && dt > 0.3) {
+        state_.action = CharacterActions::FALLING;
         prev_state_time_ = cur_time;
-    } else if (state_ == CHARACTER_STATE::STATE_FALLING) {
+    } else if (state_.is_falling()) {
         float ground_height = get_ground_height(objects);
         if ((ground_height + 0.2) > object_.get_base().y) {
-            state_ = CHARACTER_STATE::STATE_STANDING;
+            state_.action = CharacterActions::STANDING;
             position_.y = position_.y - object_.get_base().y + ground_height;
         }
     }
