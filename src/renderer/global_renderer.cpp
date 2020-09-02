@@ -9,7 +9,7 @@ GlobalRenderer::GlobalRenderer(GLFWwindow * window, const Camera & camera)
     glDepthFunc(GL_LESS);
 }
 
-void GlobalRenderer::add_renderer(Object & object)
+void GlobalRenderer::add_renderer(std::shared_ptr<Object> object)
 {
     renderers_.push_back(Renderer(camera_, object));
 }

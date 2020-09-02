@@ -8,7 +8,7 @@ class GlobalRenderer {
 public:
     GlobalRenderer(GLFWwindow * window, const Camera & camera);
 
-    void add_renderer(Object & object);
+    void add_renderer(std::shared_ptr<Object> object);
     void render();
 
 private:

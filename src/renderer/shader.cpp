@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <memory>
 
 
 bool Shader::compile_shader(const char* vertexPath, const char* fragmentPath) {
@@ -72,8 +73,8 @@ bool Shader::compile_shader(const char* vertexPath, const char* fragmentPath) {
     return true;
 }
 
-void Shader::run() { 
-    glUseProgram(id_); 
+void Shader::run() {
+    glUseProgram(id_);
 }
 
 void Shader::set_bool(const std::string &name, bool value) {

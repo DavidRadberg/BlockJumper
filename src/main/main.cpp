@@ -4,6 +4,7 @@
 #include "scene.h"
 #include "block.h"
 #include "mario.h"
+#include "rng_util.h"
 
 #include "spdlog/spdlog.h"
 
@@ -14,6 +15,28 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+
+
+void fill_scene(Scene * scene, int n_blocks = 100, float range = 70.0, float max_height = 8.0, float max_width = 15.0)
+{
+    std::shared_ptr<Block> ground = std::make_shared<Block>(glm::vec3(-range, -10.0, -range), glm::vec3(range + max_width, 0.0, range + max_width), TEXTURES::GRASS, true);
+    scene->add_object(ground);
+
+    srand(1234);
+
+    for (int i = 0; i < n_blocks; i++) {
+        float x = generate_random_float(range, -range);
+        float z = generate_random_float(range, -range);
+
+        float width = generate_random_float(max_width, 1.0);
+        float depth = generate_random_float(max_width, 1.0);
+        float height = generate_random_float(max_height, 1.0);
+
+        std::shared_ptr<Block> block = std::make_shared<Block>(glm::vec3(x, 0.0, z), glm::vec3(x + width, height, z + depth), TEXTURES::STONE, true);
+        scene->add_object(block);
+    }
 }
 
 int main()
@@ -43,25 +66,10 @@ int main()
 
     glViewport(0, 0, width, height);
 
-    Mario mario(TEXTURES::MARIO_MAIN);
-
+    std::shared_ptr<Mario> mario = std::make_shared<Mario>(TEXTURES::MARIO_MAIN);
     Scene scene(window, mario, (float) width / (float) height, 60.0);
 
-    Block block(glm::vec3(-50.0, 0.0, -50.0), glm::vec3(50.0, -5.0, 50.0), TEXTURES::GRASS, true);
-    scene.add_object(block);
-
-    Block block2(glm::vec3(10.0, 10.0, 0.0), glm::vec3(7.0, 3.0, 6.0), TEXTURES::STONE, true);
-    scene.add_object(block2);
-
-    Block block3(glm::vec3(-2.0, 0.0, -1.0), glm::vec3(-4.0, 1.0, 1.0), TEXTURES::STONE, true);
-    scene.add_object(block3);
-
-    Block block4(glm::vec3(-2.0, 0.0, -10.0), glm::vec3(-3.0, 1.0, -11.0), TEXTURES::STONE, true);
-    scene.add_object(block4);
-
-    Block block5(glm::vec3(-5.0, 0.0, -4.0), glm::vec3(-9.0, 4.0, -14.0), TEXTURES::STONE, true);
-    scene.add_object(block5);
-
+    fill_scene(&scene);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 

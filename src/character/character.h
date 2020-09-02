@@ -12,15 +12,15 @@
 
 class Character {
 public:
-    Character(GLFWwindow * window, Camera & camera, Object & object);
+    Character(GLFWwindow * window, Camera & camera, std::shared_ptr<Object> object);
 
-    void process_input(const std::vector<Object> & objects);
+    void process_input(const std::vector<std::shared_ptr<Object>> & objects);
     const glm::vec3 & get_position() const { return position_; };
 
 private:
     GLFWwindow * window_;
     Camera & camera_;
-    Object & object_;
+    std::shared_ptr<Object> object_;
     GLFWgamepadstate gamepad_state_;
 
     float last_process_;
@@ -29,10 +29,10 @@ private:
     float cam_angle_y_ = 0.1;
     float cam_angle_zx_ = 0.0;
 
-    void update_position(float dt, const std::vector<Object> & objects);
+    void update_position(float dt, const std::vector<std::shared_ptr<Object>> & objects);
     void update_angles(float dt);
     float get_axis_input(int axis);
-    bool update_collisions(const std::vector<Object> & objects);
+    bool update_collisions(const std::vector<std::shared_ptr<Object>> & objects);
 
     float move_speed_ = 8.0;
     float jump_speed_ = 3.5;
@@ -40,8 +40,8 @@ private:
     float angle_speed_ = 2.0;
     float epsilon_ = 0.2;
 
-    float get_ground_height(const std::vector<Object> & objects);
-    void update_state(const std::vector<Object> & objects);
+    float get_ground_height(const std::vector<std::shared_ptr<Object>> & objects);
+    void update_state(const std::vector<std::shared_ptr<Object>> & objects);
 
     float prev_state_time_;
     CharacterState state_;

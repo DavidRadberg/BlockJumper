@@ -8,16 +8,17 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <memory>
 
 class Renderer {
 public:
-    Renderer(const Camera & camera, Object & object);
+    Renderer(const Camera & camera, std::shared_ptr<Object> object);
     void render();
 
 private:
     Shader shader_;
     const Camera & camera_;
-    Object & object_;
+    std::shared_ptr<Object> object_;
 
     unsigned int vbo_pos_;
     unsigned int vbo_uv_;
