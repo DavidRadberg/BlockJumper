@@ -14,7 +14,7 @@ class Character {
 public:
     Character(GLFWwindow * window, Camera & camera, Object & object);
 
-    void process_input(const std::vector<Object> & objects_);
+    void process_input(const std::vector<Object> & objects);
     const glm::vec3 & get_position() const { return position_; };
 
 private:
@@ -32,9 +32,11 @@ private:
     void update_position(float dt, const std::vector<Object> & objects);
     void update_angles(float dt);
     float get_axis_input(int axis);
+    bool update_collisions(const std::vector<Object> & objects);
 
     float move_speed_ = 8.0;
-    float jump_speed_ = 4.0;
+    float jump_speed_ = 3.5;
+    float fall_speed_ = 3.5;
     float angle_speed_ = 2.0;
     float epsilon_ = 0.2;
 

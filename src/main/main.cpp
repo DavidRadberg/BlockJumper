@@ -47,7 +47,7 @@ int main()
 
     Scene scene(window, mario, (float) width / (float) height, 60.0);
 
-    Block block(glm::vec3(-50.0, 0.0, -50.0), glm::vec3(50.0, -1.0, 50.0), TEXTURES::GRASS, true);
+    Block block(glm::vec3(-50.0, 0.0, -50.0), glm::vec3(50.0, -5.0, 50.0), TEXTURES::GRASS, true);
     scene.add_object(block);
 
     Block block2(glm::vec3(10.0, 10.0, 0.0), glm::vec3(7.0, 3.0, 6.0), TEXTURES::STONE, true);
@@ -58,6 +58,9 @@ int main()
 
     Block block4(glm::vec3(-2.0, 0.0, -10.0), glm::vec3(-3.0, 1.0, -11.0), TEXTURES::STONE, true);
     scene.add_object(block4);
+
+    Block block5(glm::vec3(-5.0, 0.0, -4.0), glm::vec3(-9.0, 4.0, -14.0), TEXTURES::STONE, true);
+    scene.add_object(block5);
 
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);

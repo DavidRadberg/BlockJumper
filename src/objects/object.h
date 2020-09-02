@@ -30,6 +30,7 @@ public:
     void transpose(const glm::vec3 & diff);
     void scale(float factor);
 
+    bool test_collision(const Object & obj, glm::vec3 & pos) const;
 
     virtual void animate(const CharacterState & state) {};
 

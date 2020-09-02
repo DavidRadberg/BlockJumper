@@ -35,10 +35,10 @@ void Mario::animate(const CharacterState & state) {
         animate_walk(walk_state_);
     } else if (state.is_jumping() || state.is_falling()) {
         // jumping pose
-        set_rotation_right_arm(-2.0);
+        set_rotation_right_arm(-1.5);
         set_rotation_left_arm(0.5);
         set_rotation_right_leg(-0.5);
-        set_rotation_left_leg(0.25);
+        set_rotation_left_leg(0.5);
     } else {
         walk_state_ = 0.0;
     }

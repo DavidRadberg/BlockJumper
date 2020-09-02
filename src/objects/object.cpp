@@ -115,3 +115,37 @@ void Object::set_org_vertices() {
     org_vertices_ = vertices_;
     org_bb_ = bb_;
 }
+
+bool Object::test_collision(const Object & obj_b, glm::vec3 & pos) const
+{
+    glm::vec3 diff = obj_b.bb_.get_mid() - bb_.get_mid();
+    glm::vec3 size_a = bb_.get_size();
+    glm::vec3 size_b = obj_b.get_size();
+    glm::vec3 delta(0.0);
+
+    // only collision if all dimensions are in this range
+    for (int i = 0; i < 3; i++) {
+        delta[i] = glm::abs(diff[i]) - 0.5 * size_a[i] - 0.5 * size_b[i];
+
+        if (delta[i] > 0.0) {
+            return false;
+        }
+    }
+
+    int move_dim = 0;
+
+    for (int i = 1; i < 3; i++) {
+        if (delta[i] > delta[move_dim]) {
+            move_dim = i;
+        }
+    }
+
+    pos = obj_b.bb_.get_mid();
+
+    if (diff[move_dim] > 0.0) {
+        pos[move_dim] = bb_.get_max()[move_dim] + 0.5 * size_b[move_dim];
+    } else {
+        pos[move_dim] = bb_.get_min()[move_dim] - 0.5 * size_b[move_dim];
+    }
+    return true;
+}

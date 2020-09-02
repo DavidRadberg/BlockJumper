@@ -33,6 +33,7 @@ void Character::process_input(const std::vector<Object> & objects)
     object_.animate(state_);
     object_.set_position(position_);
     object_.set_rotation(direction_);
+    update_collisions(objects);
 }
 
 void Character::update_position(float dt, const std::vector<Object> & objects)
@@ -65,11 +66,24 @@ void Character::update_position(float dt, const std::vector<Object> & objects)
     } else if (state_.is_jumping()) {
         movement.y = jump_speed_;
     } else if (state_.is_falling()) {
-        movement.y = -jump_speed_;
+        movement.y = -fall_speed_;
     }
 
     position_ += movement * dt * move_speed_;
     state_.speed = glm::sqrt(input_x * input_x + input_y * input_y);
+}
+
+bool Character::update_collisions(const std::vector<Object> & objects)
+{
+    glm::vec3 collision_pos(0.0);
+    for (const Object & obj : objects) {
+        if (obj.test_collision(object_, collision_pos)) {
+            position_ = collision_pos;
+            object_.set_position(position_);
+            return true;
+        }
+    }
+    return false;
 }
 
 void Character::update_angles(float dt)
@@ -107,15 +121,20 @@ void Character::update_state(const std::vector<Object> & objects)
 {
     float cur_time = glfwGetTime();
     float dt = cur_time - prev_state_time_;
-    if (gamepad_state_.buttons[GLFW_GAMEPAD_BUTTON_A] && state_.is_standing()) {
-        state_.action = CharacterActions::JUMPING;
-        prev_state_time_ = cur_time;
+    float ground_height = get_ground_height(objects);
+    if (state_.is_standing()) {
+        if (ground_height < object_.get_base().y - 0.02) {
+            state_.action = CharacterActions::FALLING;
+            prev_state_time_ = cur_time;
+        } else if (gamepad_state_.buttons[GLFW_GAMEPAD_BUTTON_A]) {
+            state_.action = CharacterActions::JUMPING;
+            prev_state_time_ = cur_time;
+        }
     } else if (state_.is_jumping() && dt > 0.3) {
         state_.action = CharacterActions::FALLING;
         prev_state_time_ = cur_time;
     } else if (state_.is_falling()) {
-        float ground_height = get_ground_height(objects);
-        if ((ground_height + 0.2) > object_.get_base().y) {
+        if ((ground_height + 0.02) > object_.get_base().y) {
             state_.action = CharacterActions::STANDING;
             position_.y = position_.y - object_.get_base().y + ground_height;
         }
